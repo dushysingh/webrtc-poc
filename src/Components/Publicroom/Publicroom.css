@@ -1,0 +1,39 @@
+audio::-webkit-media-controls-timeline,
+video::-webkit-media-controls-timeline {
+  display: none;
+}
+audio::-webkit-media-controls,
+video::-webkit-media-controls {
+  display: none;
+}
+
+.container_dashboard {
+  padding: 20px;
+}
+.btnRoom {
+  padding: 10px;
+  height: 100px !important;
+}
+
+.my-video-container {
+  position: absolute;
+  border: 1px solid #cddfe7;
+  bottom: 60px;
+  right: 40px;
+}
+
+.local-video {
+  position: absolute;
+  bottom: 60px;
+  right: 5px;
+  border-radius: 5px;
+  width: 300px;
+}
+
+.remote-video {
+  width: 23% !important;
+  height: 100%;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: aqua;
+}
