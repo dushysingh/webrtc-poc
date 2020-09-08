@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
-import Dashboard from "/Components/Dashboard/Dashboard";
-import Broadcasting from "./Components/Broadcasting/Broadcasting";
-import Publicroom from "/Components/Publicroom/Publicroom";
+import Dashboard from "./Components/Dashboard/Dashboard";
+import Publicroom from "./Components/Publicroom/Publicroom";
 
 class App extends Component {
   render() {
