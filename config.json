@@ -1,0 +1,10 @@
+{
+    "socketURL": "/",
+    "port": "9001",
+    "isUseHTTPs": true,
+    "socketMessageEvent": "RTCMultiConnection-Message",
+    "socketCustomEvent": "RTCMultiConnection-Custom-Message",
+    "sslKey": "./keys/certificate.pem",
+    "sslCert": "./keys/certificate.pem",
+    "sslCabundle": ""
+}
