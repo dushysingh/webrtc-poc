@@ -3,12 +3,10 @@ import RTCMultiConnection from "rtcmulticonnection";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import adapter from "webrtc-adapter";
 import "./Publicroom.css";
 
 var params = {};
 var streamIds = [];
-var localStreamId;
 export class Publicroom extends Component {
   constructor(props) {
     super(props);
@@ -75,7 +73,7 @@ export class Publicroom extends Component {
             localVideo.id = event.streamid;
             localVideo.srcObject = event.stream;
 
-            localStreamId = event.streamid;
+            this.localStreamId = event.streamid;
 
             this.setState({
               localStreamId: event.streamid,
@@ -113,7 +111,7 @@ export class Publicroom extends Component {
       if (event.type === "local") {
         this.connection.socket.on("disthis.connection", () => {
           if (!this.connection.getAllParticipants().length) {
-            location.reload();
+            window.location.reload();
           }
         });
       }
@@ -130,21 +128,21 @@ export class Publicroom extends Component {
     this.connection.onleave = (event) => {
       this.connection.deletePeer(event.streamid);
     };
-    // stream error
-    this.connection.onMediaError = (e) => {
-      if (e.message === "concurrent mic process limit.") {
-        if (DetectRTC.audioInputDevices.length <= 1) {
-          alert("Please select external microphone");
-          return;
-        }
+    // // stream error
+    // this.connection.onMediaError = (e) => {
+    //   if (e.message === "concurrent mic process limit.") {
+    //     if (DetectRTC.audioInputDevices.length <= 1) {
+    //       alert("Please select external microphone");
+    //       return;
+    //     }
 
-        let secondaryMic = DetectRTC.audioInputDevices[1].deviceId;
-        this.connection.mediaConstraints.audio = {
-          deviceId: secondaryMic,
-        };
-        this.connection.join(this.connection.sessionId);
-      }
-    };
+    //     let secondaryMic = DetectRTC.audioInputDevices[1].deviceId;
+    //     this.connection.mediaConstraints.audio = {
+    //       deviceId: secondaryMic,
+    //     };
+    //     this.connection.join(this.connection.sessionId);
+    //   }
+    // };
 
     // detect camera
     this.connection.DetectRTC.load(() => {
@@ -244,12 +242,6 @@ export class Publicroom extends Component {
     this.disabledButtons();
     let roomids = this.state.roomId;
     this.connection.getUserMedia((mediastreeam) => {
-      console.log("hello");
-      this.connection.streamEvents[e.streamid].startRecording();
-
-      // this.state.recordVideo = RecordRTC([event.stream], { type: "video" });
-      // console.log(this.state.recordVideo);
-      // this.state.recordVideo.startRecording();
       console.log("mediastreeam", mediastreeam);
     });
     this.connection.open(roomids, (isRoomOpened, roomid, error) => {
@@ -263,8 +255,8 @@ export class Publicroom extends Component {
   };
 
   // joined room
-  joinedRoom = () => {
-    event.preventDefault();
+  joinedRoom = (e) => {
+    e.preventDefault();
     this.disabledButtons();
     this.connection.join(this.state.roomId, (isRoomJoined, roomid, error) => {
       if (isRoomJoined) {
@@ -299,7 +291,7 @@ export class Publicroom extends Component {
 
       // close socket.io connection
       // this.connection.closeSocket();
-      location.reload();
+      window.location.reload();
     } else {
       // disthis.connection call
     }
