@@ -29,8 +29,8 @@ export class Publicroom extends Component {
   }
 
   socketConnection = () => {
-    this.connection.socketURL = "http://localhost:3002/";
-    // this.connection.socketURL = 'https://c371d2f9.ngrok.io/'
+    //this.connection.socketURL = "http://localhost:3002/";
+     this.connection.socketURL = 'http://ed5b90e85267.ngrok.io/'
     // this.connection.socketURL="https://video-chat-dev-1325.herokuapp.com/";
     this.connection.publicRoomIdentifier = params.publicRoomIdentifier;
     this.connection.socketMessageEvent = "video-demo";
@@ -387,7 +387,8 @@ export class Publicroom extends Component {
 
   // toggle switch functionality Front/rear
   switchCamera = (e, isFrontView) => {
-    let streamData = this.connection.streamEvents.selectFirst({
+    //let streamData = 
+    this.connection.streamEvents.selectFirst({
       local: true,
     });
 
@@ -551,7 +552,6 @@ export class Publicroom extends Component {
               muted
               className="local-video"
               id="local-video"
-              playsInline
             ></video>
             {this.buttonActions()}
           </div>
