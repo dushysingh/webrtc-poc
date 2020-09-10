@@ -20,6 +20,7 @@ export class Publicroom extends Component {
       localStreamId: "",
       disableFlip: false,
       isLoaded: false,
+      isRecording: false,
     };
     this.connection = new RTCMultiConnection();
     this.handleChange = this.handleChange.bind(this);
@@ -240,6 +241,35 @@ export class Publicroom extends Component {
     document.getElementById("roomId").disabled = !enable;
   };
 
+  //start recording
+  startRecording = () => {
+    this.setState({isRecording:true});
+    console.log("isRecording: ",this.state.isRecording);
+    
+    // recordRTC lib call
+    this.connection.getUserMedia( async (mediastreeam) => {
+      this.recorder = new RecordRTC(mediastreeam, {
+          type: 'video',
+          mimeType: 'video/mp4',
+          disableLogs: true
+      });
+      await this.recorder.startRecording(mediastreeam, {
+        type: 'video',
+        mimeType: 'video/mp4',
+        disableLogs: true
+      });
+    });
+  }
+
+   //stop recording
+   stopRecording = async() => {
+     this.setState({isRecording:false});
+    await this.recorder.stopRecording((blob)=>{
+      this.recorder.save(blob);
+    });
+  }
+
+
   // create room
   createRoom = (event) => {
     event.preventDefault();
@@ -247,18 +277,19 @@ export class Publicroom extends Component {
     let roomids = this.state.roomId;
     this.connection.getUserMedia( async (mediastreeam) => {
       console.log("mediastreeam", mediastreeam);
-    
-        // recordRTC lib call
-        this.recorder = new RecordRTC(mediastreeam, {
-          type: 'video',
-          mimeType: 'video/mp4',
-          disableLogs: true
-      });
-        await this.recorder.startRecording(mediastreeam, {
-          type: 'video',
-          mimeType: 'video/mp4',
-          disableLogs: true
-      });
+        //start recording
+        this.startRecording();
+      //   // recordRTC lib call
+      //   this.recorder = new RecordRTC(mediastreeam, {
+      //     type: 'video',
+      //     mimeType: 'video/mp4',
+      //     disableLogs: true
+      // });
+      //   await this.recorder.startRecording(mediastreeam, {
+      //     type: 'video',
+      //     mimeType: 'video/mp4',
+      //     disableLogs: true
+      // });
     
     
     });
@@ -284,18 +315,19 @@ export class Publicroom extends Component {
 
         this.connection.getUserMedia( async (mediastreeam) => {
           console.log("mediastreeam", mediastreeam);
+          this.startRecording();
         
-            // recordRTC lib call
-            this.recorder = new RecordRTC(mediastreeam, {
-              type: 'video',
-              mimeType: 'video/mp4',
-              disableLogs: true
-          });
-            await this.recorder.startRecording(mediastreeam, {
-              type: 'video',
-              mimeType: 'video/mp4',
-              disableLogs: true
-          });
+          //   // recordRTC lib call
+          //   this.recorder = new RecordRTC(mediastreeam, {
+          //     type: 'video',
+          //     mimeType: 'video/mp4',
+          //     disableLogs: true
+          // });
+          //   await this.recorder.startRecording(mediastreeam, {
+          //     type: 'video',
+          //     mimeType: 'video/mp4',
+          //     disableLogs: true
+          // });
         
         
         });
@@ -315,14 +347,15 @@ export class Publicroom extends Component {
       }
     });
   };
+  
 
   // end call for all members
   endCall = async (e, endForAllMembers) => {
     if (endForAllMembers) {
-
-      await this.recorder.stopRecording((blob)=>{
-        this.recorder.save(blob);
-      });
+      this.stopRecording();
+      // await this.recorder.stopRecording((blob)=>{
+      //   this.recorder.save(blob);
+      // });
       //let blob = await this.recorder.getBlob();
       //this.recorder.save(blob);
 
@@ -488,6 +521,27 @@ export class Publicroom extends Component {
 
   recordVideoActions = () => {
     console.log("In record");
+    return this.state.isRecording ? (
+      <div>
+        <Button
+          variant="contained"
+          style={{ backgroundColor: "#5bc0de" }}
+          onClick={() => this.stopRecording()}
+        >
+          Stop Recording
+        </Button>
+      </div>
+    ) : (
+      <div>
+        <Button
+          variant="contained"
+          style={{ backgroundColor: "#5bc0de" }}
+          onClick={(e) => this.startRecording(e)}
+        >
+          Start Recording
+        </Button>
+      </div>
+    );
     
   }
 
