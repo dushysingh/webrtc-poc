@@ -27,10 +27,11 @@
     "multirtc"
   ],
   "dependencies": {
+    "cors": "^2.8.5",
     "detectrtc": "latest",
     "multistreamsmixer": "latest",
-    "webrtc-adapter": "latest",
-    "ngrok": "latest"
+    "ngrok": "latest",
+    "webrtc-adapter": "latest"
   },
   "analyze": false,
   "license": "MIT",

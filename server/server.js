@@ -1,6 +1,6 @@
 // http://127.0.0.1:9001
 // http://localhost:9001
-
+const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
@@ -10,6 +10,8 @@ const socket_io = require('socket.io');
 const RTCMultiConnectionServer = require('rtcmulticonnection-server');
 const { file } = require('grunt');
 //const ngrok = require('ngrok');
+//var cors = require('cors')
+//express.use(cors());
 
 var PORT = 9002;
 var isUseHTTPs = false;

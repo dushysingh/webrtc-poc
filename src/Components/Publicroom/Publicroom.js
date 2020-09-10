@@ -30,7 +30,7 @@ export class Publicroom extends Component {
 
   socketConnection = () => {
     //this.connection.socketURL = "http://localhost:3002/";
-     this.connection.socketURL = 'http://ed5b90e85267.ngrok.io/'
+     this.connection.socketURL = 'https://af3a1e7d2cc5.ngrok.io/'
     // this.connection.socketURL="https://video-chat-dev-1325.herokuapp.com/";
     this.connection.publicRoomIdentifier = params.publicRoomIdentifier;
     this.connection.socketMessageEvent = "video-demo";
