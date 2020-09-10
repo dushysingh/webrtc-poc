@@ -10,7 +10,7 @@ const socket_io = require('socket.io');
 const RTCMultiConnectionServer = require('rtcmulticonnection-server');
 const { file } = require('grunt');
 //const ngrok = require('ngrok');
-//var cors = require('cors')
+var cors = require('cors')
 //express.use(cors());
 
 var PORT = 9002;
@@ -263,8 +263,16 @@ console.info(filename);
 
 if (isUseHTTPs) {
   // server
-  httpServer = require('https')
   var options = {
+    headers : {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
+      'Access-Control-Max-Age': 2592000, // 30 days
+      /** add other headers as per requirement */
+    }
+  }
+  httpServer = require('https')
+  options = {
     key: null,
     cert: null,
     ca: null,
@@ -311,7 +319,7 @@ if (isUseHTTPs) {
   httpApp = httpServer.createServer(options, serverHandler)
 } else {
   // local
-  httpApp = httpServer.createServer(serverHandler)
+  httpApp = httpServer.createServer(options, serverHandler)
 }
 
 RTCMultiConnectionServer.beforeHttpListen(httpApp, config)

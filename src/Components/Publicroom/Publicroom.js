@@ -30,7 +30,7 @@ export class Publicroom extends Component {
 
   socketConnection = () => {
     //this.connection.socketURL = "http://localhost:3002/";
-     this.connection.socketURL = 'https://af3a1e7d2cc5.ngrok.io/'
+     this.connection.socketURL = 'https://04e32425701c.ngrok.io/'
     // this.connection.socketURL="https://video-chat-dev-1325.herokuapp.com/";
     this.connection.publicRoomIdentifier = params.publicRoomIdentifier;
     this.connection.socketMessageEvent = "video-demo";
@@ -246,7 +246,7 @@ export class Publicroom extends Component {
     });
     this.connection.open(roomids, (isRoomOpened, roomid, error) => {
       if (isRoomOpened === true) {
-        // alert('ROOM CREATED :' + roomid)
+         alert('ROOM CREATED :' + roomid)
         this.disabledButtons(true);
       } else {
         console.error(error);
