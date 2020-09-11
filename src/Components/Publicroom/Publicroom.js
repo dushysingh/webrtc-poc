@@ -278,6 +278,27 @@ export class Publicroom extends Component {
     this.connection.join(this.state.roomId, (isRoomJoined, roomid, error) => {
       if (isRoomJoined) {
         alert("ROOM JOINED :" + roomid);
+
+
+        this.connection.getUserMedia( async (mediastreeam) => {
+          console.log("mediastreeam", mediastreeam);
+        
+            // recordRTC lib call
+            this.recorder = new RecordRTC(mediastreeam, {
+              type: 'video',
+              mimeType: 'video/mp4',
+              disableLogs: true
+          });
+            await this.recorder.startRecording(mediastreeam, {
+              type: 'video',
+              mimeType: 'video/mp4',
+              disableLogs: true
+          });
+        
+        
+        });
+
+
         this.disabledButtons(true);
       } else {
         if (error) {
