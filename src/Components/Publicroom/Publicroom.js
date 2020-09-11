@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import RTCMultiConnection from "rtcmulticonnection";
+import RecordRTC from "recordrtc";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -22,6 +23,7 @@ export class Publicroom extends Component {
     };
     this.connection = new RTCMultiConnection();
     this.handleChange = this.handleChange.bind(this);
+    this.recorder = '';
   }
 
   componentDidMount() {
@@ -30,7 +32,7 @@ export class Publicroom extends Component {
 
   socketConnection = () => {
     //this.connection.socketURL = "http://localhost:3002/";
-     this.connection.socketURL = 'https://04e32425701c.ngrok.io/'
+     this.connection.socketURL = 'https://f386afe71aca.ngrok.io/'
     // this.connection.socketURL="https://video-chat-dev-1325.herokuapp.com/";
     this.connection.publicRoomIdentifier = params.publicRoomIdentifier;
     this.connection.socketMessageEvent = "video-demo";
@@ -241,9 +243,24 @@ export class Publicroom extends Component {
     event.preventDefault();
     this.disabledButtons();
     let roomids = this.state.roomId;
-    this.connection.getUserMedia((mediastreeam) => {
+    this.connection.getUserMedia( async (mediastreeam) => {
       console.log("mediastreeam", mediastreeam);
+    
+        // recordRTC lib call
+        this.recorder = new RecordRTC(mediastreeam, {
+          type: 'video',
+          mimeType: 'video/mp4',
+          disableLogs: true
+      });
+        await this.recorder.startRecording(mediastreeam, {
+          type: 'video',
+          mimeType: 'video/mp4',
+          disableLogs: true
+      });
+    
+    
     });
+
     this.connection.open(roomids, (isRoomOpened, roomid, error) => {
       if (isRoomOpened === true) {
          alert('ROOM CREATED :' + roomid)
@@ -277,8 +294,15 @@ export class Publicroom extends Component {
   };
 
   // end call for all members
-  endCall = (e, endForAllMembers) => {
+  endCall = async (e, endForAllMembers) => {
     if (endForAllMembers) {
+
+      await this.recorder.stopRecording((blob)=>{
+        this.recorder.save(blob);
+      });
+      //let blob = await this.recorder.getBlob();
+      //this.recorder.save(blob);
+
       // disconnect with all users
       this.connection.getAllParticipants().forEach((pid) => {
         this.connection.disconnectWith(pid);
