@@ -29,12 +29,13 @@ video::-webkit-media-controls {
 }
 
 .local-video {
-  position: absolute;
+  /* position: absolute;
   bottom: 60px;
-  right: 5px;
+  right: 5px; 
+  width: 100%;*/
   border-radius: 5px;
   width: 100%;
-  padding-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .remote-video {
@@ -51,4 +52,8 @@ video::-webkit-media-controls {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+#create-room {
+  margin-right: 10px;
 }
