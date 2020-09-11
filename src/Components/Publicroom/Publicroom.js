@@ -261,9 +261,9 @@ export class Publicroom extends Component {
     });
   }
 
-   //stop recording
-   stopRecording = async() => {
-     this.setState({isRecording:false});
+  //stop recording
+  stopRecording = async() => {
+    this.setState({isRecording:false});
     await this.recorder.stopRecording((blob)=>{
       this.recorder.save(blob);
     });
@@ -357,7 +357,7 @@ export class Publicroom extends Component {
   // end call for all members
   endCall = async (e, endForAllMembers) => {
     if (endForAllMembers) {
-      this.stopRecording();
+      // this.stopRecording();
       // await this.recorder.stopRecording((blob)=>{
       //   this.recorder.save(blob);
       // });
