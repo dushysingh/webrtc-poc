@@ -10,6 +10,12 @@ video::-webkit-media-controls {
 .container_dashboard {
   padding: 20px;
 }
+
+.container_center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .btnRoom {
   padding: 10px;
   height: 100px !important;
@@ -17,9 +23,9 @@ video::-webkit-media-controls {
 
 .my-video-container {
   position: absolute;
-  border: 1px solid #cddfe7;
   bottom: 60px;
   right: 40px;
+  width: 30%;
 }
 
 .local-video {
@@ -28,12 +34,21 @@ video::-webkit-media-controls {
   right: 5px;
   border-radius: 5px;
   width: 300px;
+  padding-bottom: 40px;
 }
 
 .remote-video {
-  width: 23% !important;
+  /* width: 23% !important; */
+  width: 40%;
   height: 100%;
   padding: 20px;
   border-radius: 5px;
   box-shadow: aqua;
+}
+
+.container_flex_wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }

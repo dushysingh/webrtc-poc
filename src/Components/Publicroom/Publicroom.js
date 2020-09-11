@@ -21,6 +21,7 @@ export class Publicroom extends Component {
       disableFlip: false,
       isLoaded: false,
       isRecording: false,
+      isRoomCreatedOrJoined: false,
     };
     this.connection = new RTCMultiConnection();
     this.handleChange = this.handleChange.bind(this);
@@ -33,7 +34,7 @@ export class Publicroom extends Component {
 
   socketConnection = () => {
     //this.connection.socketURL = "http://localhost:3002/";
-     this.connection.socketURL = 'https://f386afe71aca.ngrok.io/'
+     this.connection.socketURL = 'https://f613440964f7.ngrok.io/'
     // this.connection.socketURL="https://video-chat-dev-1325.herokuapp.com/";
     this.connection.publicRoomIdentifier = params.publicRoomIdentifier;
     this.connection.socketMessageEvent = "video-demo";
@@ -244,7 +245,6 @@ export class Publicroom extends Component {
   //start recording
   startRecording = () => {
     this.setState({isRecording:true});
-    console.log("isRecording: ",this.state.isRecording);
     
     // recordRTC lib call
     this.connection.getUserMedia( async (mediastreeam) => {
@@ -298,6 +298,9 @@ export class Publicroom extends Component {
       if (isRoomOpened === true) {
          alert('ROOM CREATED :' + roomid)
         this.disabledButtons(true);
+        this.setState({isRoomCreatedOrJoined:true});
+        console.log("isRoomCreatedOrJoined:==== ",this.state.isRoomCreatedOrJoined);
+        
       } else {
         console.error(error);
       }
@@ -311,7 +314,6 @@ export class Publicroom extends Component {
     this.connection.join(this.state.roomId, (isRoomJoined, roomid, error) => {
       if (isRoomJoined) {
         alert("ROOM JOINED :" + roomid);
-
 
         this.connection.getUserMedia( async (mediastreeam) => {
           console.log("mediastreeam", mediastreeam);
@@ -334,6 +336,9 @@ export class Publicroom extends Component {
 
 
         this.disabledButtons(true);
+        this.setState({isRoomCreatedOrJoined:true});
+        console.log("isRoomCreatedOrJoined:==== ",this.state.isRoomCreatedOrJoined);
+        
       } else {
         if (error) {
           if (error === "Room not available") {
@@ -422,7 +427,7 @@ export class Publicroom extends Component {
           style={{ backgroundColor: "#5bc0de" }}
           onClick={(e) => this.unmute(e, true)}
         >
-          <i className="material-icons">volume_up</i>
+          <i className="material-icons">volume_off</i>
         </Button>
       </div>
     ) : (
@@ -432,7 +437,7 @@ export class Publicroom extends Component {
           style={{ backgroundColor: "#5bc0de" }}
           onClick={(e) => this.mute(e, true)}
         >
-          <i className="material-icons">volume_off</i>
+          <i className="material-icons">volume_up</i>
         </Button>
       </div>
     );
@@ -445,7 +450,7 @@ export class Publicroom extends Component {
         style={{ backgroundColor: "#5bc0de" }}
         onClick={(e) => this.unmute(e, false)}
       >
-        <i className="material-icons">videocam</i>
+        <i className="material-icons">videocam_off</i>
       </Button>
     ) : (
       <Button
@@ -453,7 +458,7 @@ export class Publicroom extends Component {
         style={{ backgroundColor: "#5bc0de" }}
         onClick={(e) => this.mute(e, false)}
       >
-        <i className="material-icons">videocam_off</i>
+        <i className="material-icons">videocam</i>
       </Button>
     );
   };
@@ -520,7 +525,6 @@ export class Publicroom extends Component {
   };
 
   recordVideoActions = () => {
-    console.log("In record");
     return this.state.isRecording ? (
       <div>
         <Button
@@ -528,7 +532,7 @@ export class Publicroom extends Component {
           style={{ backgroundColor: "#5bc0de" }}
           onClick={() => this.stopRecording()}
         >
-          Stop Recording
+          <i className="material-icons">stop</i>
         </Button>
       </div>
     ) : (
@@ -538,7 +542,7 @@ export class Publicroom extends Component {
           style={{ backgroundColor: "#5bc0de" }}
           onClick={(e) => this.startRecording(e)}
         >
-          Start Recording
+          <i className="material-icons">album</i>
         </Button>
       </div>
     );
@@ -582,46 +586,54 @@ export class Publicroom extends Component {
           display="flex"
           style={{ backgroundColor: "#FFFAFA", height: "90vh" }}
         >
-          <div>
-            <form className="form-room">
-              <div className="container_dashboard">
-                <div className="col-lg-12 container_dashboard">
-                  <input
-                    type="text"
-                    name="roomId"
-                    placeholder="Room ID"
-                    id="roomId"
-                    label="Name"
-                    value={this.state.roomId}
-                    onChange={(e) => this.handleChange(e)}
-                  />
-                </div>
-                <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    id="create-room"
-                    onClick={(e) => this.createRoom(e)}
-                  >
-                    Create Room
-                  </Button>
-                </div>
+          { (this.state.isRoomCreatedOrJoined === false) ?
+              (<div>
+              <form className="form-room">
+                <div className="container_dashboard">
+                  <div className="row container_center">
+                    <div className="col-lg-8 col-md-8 col-sm-8 container_dashboard">
+                      <input
+                        type="text"
+                        name="roomId"
+                        placeholder="Room ID"
+                        id="roomId"
+                        label="Name"
+                        value={this.state.roomId}
+                        onChange={(e) => this.handleChange(e)}
+                        className="form-control text-center"
+                      />
+                    </div>
+                  </div>
 
-                <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    id="join-room"
-                    onClick={(e) => this.joinedRoom(e)}
-                  >
-                    {" "}
-                    Joined Room
-                  </Button>
+                  <div className="row container_center">
+                    <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 container_center">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        id="create-room"
+                        onClick={(e) => this.createRoom(e)}
+                      >
+                        Create Room
+                      </Button>
+                    </div>
+
+                    <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 container_center">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        id="join-room"
+                        onClick={(e) => this.joinedRoom(e)}
+                      >
+                        {" "}
+                        Joined Room
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </form>
-          </div>
-          <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              </form>
+            </div>): null
+          }
+          <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12 container_flex_wrap container_dashboard">
             <video
               autoPlay
               className="remote-video"
@@ -652,8 +664,8 @@ export class Publicroom extends Component {
               id="remote-video4"
               playsInline
             ></video>
-          </div>
-          <div className="my-video-container">
+          
+          <div className="row my-video-container">
             <video
               autoPlay
               playsInline
@@ -662,6 +674,7 @@ export class Publicroom extends Component {
               id="local-video"
             ></video>
             {this.buttonActions()}
+          </div>
           </div>
         </div>
       </React.Fragment>
