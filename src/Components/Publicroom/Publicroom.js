@@ -267,6 +267,7 @@ export class Publicroom extends Component {
       this.recorder.save(blob);
       this.setState({isRecording:false});
     });
+    window.location.reload();
   }
 
 
@@ -357,7 +358,7 @@ export class Publicroom extends Component {
   // end call for all members
   endCall = async (e, endForAllMembers) => {
     if (endForAllMembers) {
-       this.stopRecording();
+      this.stopRecording();
       // await this.recorder.stopRecording((blob)=>{
       //   this.recorder.save(blob);
       // });
@@ -589,9 +590,8 @@ export class Publicroom extends Component {
           { (this.state.isRoomCreatedOrJoined === false) ?
               (<div>
               <form className="form-room">
-                <div className="container_dashboard">
-                  <div className="row container_center">
-                    <div className="col-lg-8 col-md-8 col-sm-8 container_dashboard">
+                <div className="container_center">
+                    <div className="col-lg-5 col-md-8 col-sm-8 container_dashboard">
                       <input
                         type="text"
                         name="roomId"
@@ -603,35 +603,37 @@ export class Publicroom extends Component {
                         className="form-control text-center"
                       />
                     </div>
-                  </div>
 
-                  <div className="row container_center">
-                    <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 container_center">
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        id="create-room"
-                        onClick={(e) => this.createRoom(e)}
-                      >
-                        Create Room
-                      </Button>
-                    </div>
+                  <div className="col-lg-3 col-md-4 col-sm-4 col-xs-4">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      id="create-room"
+                      onClick={(e) => this.createRoom(e)}
+                    >
+                      Create Room
+                    </Button>
 
-                    <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 container_center">
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        id="join-room"
-                        onClick={(e) => this.joinedRoom(e)}
-                      >
-                        {" "}
-                        Joined Room
-                      </Button>
-                    </div>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      id="join-room"
+                      onClick={(e) => this.joinedRoom(e)}
+                    >
+                      {" "}
+                      Joined Room
+                    </Button>
                   </div>
                 </div>
               </form>
-            </div>): null
+            </div>): 
+            (
+              <div className="text-center">
+                <h3 className="text-success">Unique URL for your room:</h3>
+                <h4 className="text-info">Room Id: {this.state.roomId}</h4>
+                {/* <h5 className="">Hash URL: #{this.state.roomId}</h5> */}
+              </div>
+            )
           }
           <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12 container_flex_wrap container_dashboard">
             <video
@@ -665,7 +667,7 @@ export class Publicroom extends Component {
               playsInline
             ></video>
           
-          <div className="row my-video-container">
+          <div>
             <video
               autoPlay
               playsInline
