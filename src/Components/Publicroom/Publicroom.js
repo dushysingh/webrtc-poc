@@ -247,25 +247,25 @@ export class Publicroom extends Component {
     this.setState({isRecording:true});
     
     // recordRTC lib call
-    this.connection.getUserMedia( async (mediastreeam) => {
+    this.connection.getUserMedia( {audio: {echoCancellation:true}}, async (mediastreeam) => {
       this.recorder = new RecordRTC(mediastreeam, {
           type: 'video',
-          mimeType: 'video/mp4',
-          disableLogs: true
+          mimeType: 'video/webm',
+          disableLogs: false
       });
       await this.recorder.startRecording(mediastreeam, {
         type: 'video',
-        mimeType: 'video/mp4',
-        disableLogs: true
+        mimeType: 'video/webm',
+        disableLogs: false
       });
     });
   }
 
   //stop recording
   stopRecording = async() => {
-    this.setState({isRecording:false});
     await this.recorder.stopRecording((blob)=>{
       this.recorder.save(blob);
+      this.setState({isRecording:false});
     });
   }
 
@@ -275,10 +275,10 @@ export class Publicroom extends Component {
     event.preventDefault();
     this.disabledButtons();
     let roomids = this.state.roomId;
-    this.connection.getUserMedia( async (mediastreeam) => {
+    this.connection.getUserMedia( {audio: {echoCancellation:true}}, async (mediastreeam) => {
       console.log("mediastreeam", mediastreeam);
         //start recording
-        this.startRecording();
+        this.startRecording(mediastreeam);
       //   // recordRTC lib call
       //   this.recorder = new RecordRTC(mediastreeam, {
       //     type: 'video',
@@ -315,9 +315,9 @@ export class Publicroom extends Component {
       if (isRoomJoined) {
         alert("ROOM JOINED :" + roomid);
 
-        this.connection.getUserMedia( async (mediastreeam) => {
+        this.connection.getUserMedia( {audio: {echoCancellation:true}}, async (mediastreeam) => {
           console.log("mediastreeam", mediastreeam);
-          this.startRecording();
+          this.startRecording(mediastreeam);
         
           //   // recordRTC lib call
           //   this.recorder = new RecordRTC(mediastreeam, {
@@ -357,7 +357,7 @@ export class Publicroom extends Component {
   // end call for all members
   endCall = async (e, endForAllMembers) => {
     if (endForAllMembers) {
-      // this.stopRecording();
+       this.stopRecording();
       // await this.recorder.stopRecording((blob)=>{
       //   this.recorder.save(blob);
       // });
