@@ -54,11 +54,12 @@ export class Publicroom extends Component {
       OfferToReceiveAudio: true,
       OfferToReceiveVideo: true,
     };
-    const remoteVideo = document.getElementById("remote-video");
-    const remoteVideo1 = document.getElementById("remote-video1");
-    const remoteVideo2 = document.getElementById("remote-video2");
-    const remoteVideo3 = document.getElementById("remote-video3");
-    const remoteVideo4 = document.getElementById("remote-video4");
+    // const remoteVideo = document.getElementById("remote-video");
+    // const remoteVideo1 = document.getElementById("remote-video1");
+    // const remoteVideo2 = document.getElementById("remote-video2");
+    // const remoteVideo3 = document.getElementById("remote-video3");
+    // const remoteVideo4 = document.getElementById("remote-video4");
+    var remoteVideosContainer = document.getElementById("remote-videos-container");
 
     this.connection.videoContainer = document.getElementById(
       "videos-container"
@@ -66,6 +67,8 @@ export class Publicroom extends Component {
     // new stream
     this.connection.onstream = (event) => {
       console.log("event== ",event);
+      var remoteVideoElement = event.mediaElement; 
+      remoteVideoElement.style.paddingBottom = '20px';
       
       if (event.userid) {
         if (streamIds.includes(event.streamid)) {
@@ -91,26 +94,27 @@ export class Publicroom extends Component {
             });
           }
         } else {
-          if (!remoteVideo.srcObject) {
-            remoteVideo.id = event.streamid;
-            return (remoteVideo.srcObject = event.stream);
-          }
-          if (!remoteVideo1.srcObject) {
-            remoteVideo1.id = event.streamid;
-            return (remoteVideo1.srcObject = event.stream);
-          }
-          if (!remoteVideo2.srcObject) {
-            remoteVideo2.id = event.streamid;
-            return (remoteVideo2.srcObject = event.stream);
-          }
-          if (!remoteVideo3.srcObject) {
-            remoteVideo3.id = event.streamid;
-            return (remoteVideo3.srcObject = event.stream);
-          }
-          if (!remoteVideo4.srcObject) {
-            remoteVideo4.id = event.streamid;
-            return (remoteVideo4.srcObject = event.stream);
-          }
+          remoteVideosContainer.appendChild(remoteVideoElement);
+          // if (!remoteVideo.srcObject) {
+          //   remoteVideo.id = event.streamid;
+          //   return (remoteVideo.srcObject = event.stream);
+          // }
+          // if (!remoteVideo1.srcObject) {
+          //   remoteVideo1.id = event.streamid;
+          //   return (remoteVideo1.srcObject = event.stream);
+          // }
+          // if (!remoteVideo2.srcObject) {
+          //   remoteVideo2.id = event.streamid;
+          //   return (remoteVideo2.srcObject = event.stream);
+          // }
+          // if (!remoteVideo3.srcObject) {
+          //   remoteVideo3.id = event.streamid;
+          //   return (remoteVideo3.srcObject = event.stream);
+          // }
+          // if (!remoteVideo4.srcObject) {
+          //   remoteVideo4.id = event.streamid;
+          //   return (remoteVideo4.srcObject = event.stream);
+          // }
         }
       }
 
@@ -636,7 +640,11 @@ export class Publicroom extends Component {
             )
           }
           <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12 container_flex_wrap container_dashboard">
-            <video
+            <div id="remote-videos-container">
+
+            </div>
+            
+            {/* <video
               autoPlay
               className="remote-video"
               id="remote-video"
@@ -665,7 +673,7 @@ export class Publicroom extends Component {
               className="remote-video"
               id="remote-video4"
               playsInline
-            ></video>
+            ></video> */}
           
           <div>
             <video
