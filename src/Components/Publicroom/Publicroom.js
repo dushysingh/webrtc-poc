@@ -33,9 +33,7 @@ export class Publicroom extends Component {
   }
 
   socketConnection = () => {
-    //this.connection.socketURL = "http://localhost:3002/";
      this.connection.socketURL = 'https://f613440964f7.ngrok.io/'
-    // this.connection.socketURL="https://video-chat-dev-1325.herokuapp.com/";
     this.connection.publicRoomIdentifier = params.publicRoomIdentifier;
     this.connection.socketMessageEvent = "video-demo";
 
@@ -54,11 +52,6 @@ export class Publicroom extends Component {
       OfferToReceiveAudio: true,
       OfferToReceiveVideo: true,
     };
-    // const remoteVideo = document.getElementById("remote-video");
-    // const remoteVideo1 = document.getElementById("remote-video1");
-    // const remoteVideo2 = document.getElementById("remote-video2");
-    // const remoteVideo3 = document.getElementById("remote-video3");
-    // const remoteVideo4 = document.getElementById("remote-video4");
     var remoteVideosContainer = document.getElementById("remote-videos-container");
 
     this.connection.videoContainer = document.getElementById(
@@ -95,26 +88,6 @@ export class Publicroom extends Component {
           }
         } else {
           remoteVideosContainer.appendChild(remoteVideoElement);
-          // if (!remoteVideo.srcObject) {
-          //   remoteVideo.id = event.streamid;
-          //   return (remoteVideo.srcObject = event.stream);
-          // }
-          // if (!remoteVideo1.srcObject) {
-          //   remoteVideo1.id = event.streamid;
-          //   return (remoteVideo1.srcObject = event.stream);
-          // }
-          // if (!remoteVideo2.srcObject) {
-          //   remoteVideo2.id = event.streamid;
-          //   return (remoteVideo2.srcObject = event.stream);
-          // }
-          // if (!remoteVideo3.srcObject) {
-          //   remoteVideo3.id = event.streamid;
-          //   return (remoteVideo3.srcObject = event.stream);
-          // }
-          // if (!remoteVideo4.srcObject) {
-          //   remoteVideo4.id = event.streamid;
-          //   return (remoteVideo4.srcObject = event.stream);
-          // }
         }
       }
 
@@ -138,21 +111,6 @@ export class Publicroom extends Component {
     this.connection.onleave = (event) => {
       this.connection.deletePeer(event.streamid);
     };
-    // // stream error
-    // this.connection.onMediaError = (e) => {
-    //   if (e.message === "concurrent mic process limit.") {
-    //     if (DetectRTC.audioInputDevices.length <= 1) {
-    //       alert("Please select external microphone");
-    //       return;
-    //     }
-
-    //     let secondaryMic = DetectRTC.audioInputDevices[1].deviceId;
-    //     this.connection.mediaConstraints.audio = {
-    //       deviceId: secondaryMic,
-    //     };
-    //     this.connection.join(this.connection.sessionId);
-    //   }
-    // };
 
     // detect camera
     this.connection.DetectRTC.load(() => {
@@ -284,18 +242,7 @@ export class Publicroom extends Component {
       console.log("mediastreeam", mediastreeam);
         //start recording
         this.startNewRecording();
-      //   // recordRTC lib call
-      //   this.recorder = new RecordRTC(mediastreeam, {
-      //     type: 'video',
-      //     mimeType: 'video/mp4',
-      //     disableLogs: true
-      // });
-      //   await this.recorder.startRecording(mediastreeam, {
-      //     type: 'video',
-      //     mimeType: 'video/mp4',
-      //     disableLogs: true
-      // });
-    
+      
     
     });
 
@@ -322,21 +269,7 @@ export class Publicroom extends Component {
 
         this.connection.getUserMedia( async (mediastreeam) => {
           console.log("mediastreeam", mediastreeam);
-          this.startNewRecording();
-        
-          //   // recordRTC lib call
-          //   this.recorder = new RecordRTC(mediastreeam, {
-          //     type: 'video',
-          //     mimeType: 'video/mp4',
-          //     disableLogs: true
-          // });
-          //   await this.recorder.startRecording(mediastreeam, {
-          //     type: 'video',
-          //     mimeType: 'video/mp4',
-          //     disableLogs: true
-          // });
-        
-        
+          this.startNewRecording();   
         });
 
 
@@ -363,11 +296,6 @@ export class Publicroom extends Component {
   endCall = async (e, endForAllMembers) => {
     if (endForAllMembers) {
       this.stopNewRecording();
-      // await this.recorder.stopRecording((blob)=>{
-      //   this.recorder.save(blob);
-      // });
-      //let blob = await this.recorder.getBlob();
-      //this.recorder.save(blob);
 
       // disconnect with all users
       this.connection.getAllParticipants().forEach((pid) => {
@@ -477,7 +405,6 @@ export class Publicroom extends Component {
 
   // toggle switch functionality Front/rear
   switchCamera = (e, isFrontView) => {
-    //let streamData = 
     this.connection.streamEvents.selectFirst({
       local: true,
     });
@@ -490,7 +417,6 @@ export class Publicroom extends Component {
     this.connection.attachStreams.forEach((localStream) => {
       localStream.stop();
     });
-    // this.connection.removeStream(this.state.localStreamId)
     localVideo.id = "local-video";
     this.capture(this.connection.mediaConstraints, isFrontView);
     this.setState({ isFrontViewCamera: !isFrontView });
@@ -571,8 +497,6 @@ export class Publicroom extends Component {
         <Grid item>{this.muteActions()}</Grid>
         <Grid item>{this.muteVideoActions()}</Grid>
         <Grid item>{this.recordVideoActions()}</Grid>
-
-        {/* <button className="btn btn-danger" onClick={e=> this.endCall(e,false)}> <i className="material-icons">clear_all</i></button> */}
       </Grid>
     ) : (
       <div></div>
@@ -637,56 +561,23 @@ export class Publicroom extends Component {
               <div className="text-center">
                 <h3 className="text-success">Unique URL for your room:</h3>
                 <h4 className="text-info">Room Id: {this.state.roomId}</h4>
-                {/* <h5 className="">Hash URL: #{this.state.roomId}</h5> */}
               </div>
             )
           }
           <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12 container_flex_wrap container_dashboard">
             <div id="remote-videos-container">
-
             </div>
             
-            {/* <video
-              autoPlay
-              className="remote-video"
-              id="remote-video"
-              playsInline
-            ></video>
-            <video
-              autoPlay
-              className="remote-video"
-              id="remote-video1"
-              playsInline
-            ></video>
-            <video
-              autoPlay
-              className="remote-video"
-              id="remote-video2"
-              playsInline
-            ></video>
-            <video
-              autoPlay
-              className="remote-video"
-              id="remote-video3"
-              playsInline
-            ></video>
-            <video
-              autoPlay
-              className="remote-video"
-              id="remote-video4"
-              playsInline
-            ></video> */}
-          
-          <div>
-            <video
-              autoPlay
-              playsInline
-              muted
-              className="local-video"
-              id="local-video"
-            ></video>
-            {this.buttonActions()}
-          </div>
+            <div>
+              <video
+                autoPlay
+                playsInline
+                muted
+                className="local-video"
+                id="local-video"
+              ></video>
+              {this.buttonActions()}
+            </div>
           </div>
         </div>
       </React.Fragment>

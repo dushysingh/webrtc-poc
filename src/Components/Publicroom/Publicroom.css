@@ -29,17 +29,12 @@ video::-webkit-media-controls {
 }
 
 .local-video {
-  /* position: absolute;
-  bottom: 60px;
-  right: 5px; 
-  width: 100%;*/
   border-radius: 5px;
   width: 100%;
   margin-bottom: 20px;
 }
 
 .remote-video {
-  /* width: 23% !important; */
   width: 40%;
   height: 100%;
   padding: 20px;
