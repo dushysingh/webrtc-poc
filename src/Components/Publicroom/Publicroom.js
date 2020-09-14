@@ -247,12 +247,12 @@ export class Publicroom extends Component {
   };
 
   //start recording
-  startRecording = () => {
+  startNewRecording = () => {
     this.setState({isRecording:true});
     
     // recordRTC lib call
-    this.connection.getUserMedia( {audio: {echoCancellation:true}}, async (mediastreeam) => {
-      this.recorder = new RecordRTC(mediastreeam, {
+    this.connection.getUserMedia( async (mediastreeam) => {
+      this.recorder = await new RecordRTC(mediastreeam, {
           type: 'video',
           mimeType: 'video/webm',
           disableLogs: false
@@ -266,7 +266,7 @@ export class Publicroom extends Component {
   }
 
   //stop recording
-  stopRecording = async() => {
+  stopNewRecording = async() => {
     await this.recorder.stopRecording((blob)=>{
       this.recorder.save(blob);
       this.setState({isRecording:false});
@@ -280,10 +280,10 @@ export class Publicroom extends Component {
     event.preventDefault();
     this.disabledButtons();
     let roomids = this.state.roomId;
-    this.connection.getUserMedia( {audio: {echoCancellation:true}}, async (mediastreeam) => {
+    this.connection.getUserMedia( async (mediastreeam) => {
       console.log("mediastreeam", mediastreeam);
         //start recording
-        this.startRecording(mediastreeam);
+        this.startNewRecording();
       //   // recordRTC lib call
       //   this.recorder = new RecordRTC(mediastreeam, {
       //     type: 'video',
@@ -320,9 +320,9 @@ export class Publicroom extends Component {
       if (isRoomJoined) {
         alert("ROOM JOINED :" + roomid);
 
-        this.connection.getUserMedia( {audio: {echoCancellation:true}}, async (mediastreeam) => {
+        this.connection.getUserMedia( async (mediastreeam) => {
           console.log("mediastreeam", mediastreeam);
-          this.startRecording(mediastreeam);
+          this.startNewRecording();
         
           //   // recordRTC lib call
           //   this.recorder = new RecordRTC(mediastreeam, {
@@ -362,7 +362,7 @@ export class Publicroom extends Component {
   // end call for all members
   endCall = async (e, endForAllMembers) => {
     if (endForAllMembers) {
-      this.stopRecording();
+      this.stopNewRecording();
       // await this.recorder.stopRecording((blob)=>{
       //   this.recorder.save(blob);
       // });
@@ -535,7 +535,7 @@ export class Publicroom extends Component {
         <Button
           variant="contained"
           style={{ backgroundColor: "#5bc0de" }}
-          onClick={() => this.stopRecording()}
+          onClick={() => this.stopNewRecording()}
         >
           <i className="material-icons">stop</i>
         </Button>
@@ -545,7 +545,7 @@ export class Publicroom extends Component {
         <Button
           variant="contained"
           style={{ backgroundColor: "#5bc0de" }}
-          onClick={(e) => this.startRecording(e)}
+          onClick={(e) => this.startNewRecording(e)}
         >
           <i className="material-icons">album</i>
         </Button>
