@@ -589,26 +589,27 @@ export class Publicroom extends Component {
         <CssBaseline />
         <div
           display="flex"
-          style={{ backgroundColor: "#FFFAFA", height: "90vh" }}
+          style={{ backgroundColor: "#FFFAFA", height: "85vh" }}
         >
           { (this.state.isRoomCreatedOrJoined === false) ?
               (<div>
               <form className="form-room">
                 <div className="container_center">
-                    <div className="col-lg-5 col-md-8 col-sm-8 container_dashboard">
-                      <input
-                        type="text"
-                        name="roomId"
-                        placeholder="Room ID"
-                        id="roomId"
-                        label="Name"
-                        value={this.state.roomId}
-                        onChange={(e) => this.handleChange(e)}
-                        className="form-control text-center"
-                      />
-                    </div>
+                  <div className="col-lg-2 col-md-2 col-sm-2"></div>
+                  <div className="col-lg-5 col-md-5 col-sm-5 container_dashboard">
+                    <input
+                      type="text"
+                      name="roomId"
+                      placeholder="Room ID"
+                      id="roomId"
+                      label="Name"
+                      value={this.state.roomId}
+                      onChange={(e) => this.handleChange(e)}
+                      className="form-control text-center"
+                    />
+                  </div>
 
-                  <div className="col-lg-3 col-md-4 col-sm-4 col-xs-4">
+                  <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                     <Button
                       variant="contained"
                       color="primary"
@@ -625,9 +626,10 @@ export class Publicroom extends Component {
                       onClick={(e) => this.joinedRoom(e)}
                     >
                       {" "}
-                      Joined Room
+                      Join Room
                     </Button>
                   </div>
+                  <div className="col-lg-2 col-md-2 col-sm-2"></div>
                 </div>
               </form>
             </div>): 
