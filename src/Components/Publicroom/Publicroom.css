@@ -30,16 +30,12 @@ video::-webkit-media-controls {
 
 .local-video {
   border-radius: 5px;
-  width: 100%;
-  margin-bottom: 20px;
+  margin: 10px;
 }
 
 .remote-video {
-  width: 40%;
-  height: 100%;
-  padding: 20px;
+  margin: 10px;
   border-radius: 5px;
-  box-shadow: aqua;
 }
 
 .container_flex_wrap {

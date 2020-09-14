@@ -18,7 +18,6 @@ export class Publicroom extends Component {
       roomId: "",
       isMute: false,
       isMuteVideo: false,
-      isFrontViewCamera: false,
       localStreamId: "",
       disableFlip: false,
       isLoaded: false,
@@ -63,7 +62,7 @@ export class Publicroom extends Component {
     this.connection.onstream = (event) => {
       console.log("event== ",event);
       var remoteVideoElement = event.mediaElement; 
-      remoteVideoElement.style.paddingBottom = '20px';
+      remoteVideoElement.className = "remote-video";
       
       if (event.userid) {
         if (streamIds.includes(event.streamid)) {
@@ -479,47 +478,47 @@ export class Publicroom extends Component {
           style={{ backgroundColor: "#FFFAFA", height: "85vh" }}
         >
           { (this.state.isRoomCreatedOrJoined === false) ?
-              (<div>
+            (
               <form className="form-room">
                 <div className="container_center">
-                  <div className="col-lg-2 col-md-2"></div>
-                  <div className="col-lg-5 col-md-5 col-sm-12 col-xs-12 container_dashboard">
-                    <input
-                      type="text"
-                      name="roomId"
-                      placeholder="Room ID"
-                      id="roomId"
-                      label="Name"
-                      value={this.state.roomId}
-                      onChange={(e) => this.handleChange(e)}
-                      className="form-control text-center"
-                    />
-                  </div>
+                  <div className="row">
+                    <div className="col-sm-6 container_dashboard">
+                      <input
+                        type="text"
+                        name="roomId"
+                        placeholder="Room ID"
+                        id="roomId"
+                        label="Name"
+                        value={this.state.roomId}
+                        onChange={(e) => this.handleChange(e)}
+                        className="form-control text-center"
+                      />
+                    </div>
 
-                  <div className="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      id="create-room"
-                      onClick={(e) => this.createRoom(e)}
-                    >
-                      Create Room
-                    </Button>
+                    <div className="col-sm-6 container_dashboard">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        id="create-room"
+                        onClick={(e) => this.createRoom(e)}
+                      >
+                        Create Room
+                      </Button>
 
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      id="join-room"
-                      onClick={(e) => this.joinedRoom(e)}
-                    >
-                      {" "}
-                      Join Room
-                    </Button>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        id="join-room"
+                        onClick={(e) => this.joinedRoom(e)}
+                      >
+                        {" "}
+                        Join Room
+                      </Button>
+                    </div>
                   </div>
-                  <div className="col-lg-2 col-md-2"></div>
                 </div>
               </form>
-            </div>): 
+            ): 
             (
               <div className="text-center">
                 <h3 className="text-success">Use this unique Room Id to join this room:</h3>
@@ -531,7 +530,7 @@ export class Publicroom extends Component {
               </div>
             )
           }
-          <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12 container_flex_wrap container_dashboard">
+          <div className="container_flex_wrap">
             <div id="remote-videos-container">
             </div>
             
