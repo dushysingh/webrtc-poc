@@ -9,7 +9,6 @@ var httpServer = require('http');
 const socket_io = require('socket.io');
 const RTCMultiConnectionServer = require('rtcmulticonnection-server');
 const { file } = require('grunt');
-//const ngrok = require('ngrok');
 var cors = require('cors')
 //express.use(cors());
 
@@ -325,9 +324,6 @@ if (isUseHTTPs) {
 RTCMultiConnectionServer.beforeHttpListen(httpApp, config)
 httpApp = httpApp.listen(PORT, 'localhost', async () => {
   RTCMultiConnectionServer.afterHttpListen(httpApp, config)
-
-  // const url = await ngrok.connect(PORT);
-  // console.info(`ngrok url is available ${url}`);
 })
 1
 
@@ -345,7 +341,3 @@ socket_io(httpApp).on('connection', function (socket) {
     socket.broadcast.emit(params.socketCustomEvent, message)
   })
 })
-
-// (async ()=> {
-  
-// })();
