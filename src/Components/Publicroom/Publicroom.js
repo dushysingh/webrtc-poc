@@ -4,7 +4,9 @@ import RecordRTC from "recordrtc";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import Tooltip from '@material-ui/core/Tooltip';
 import "./Publicroom.css";
+import { DOMAIN_BASE_URL } from "../../env";
 
 var params = {};
 var streamIds = [];
@@ -355,44 +357,52 @@ export class Publicroom extends Component {
   muteActions = () => {
     return this.state.isMute ? (
       <div>
-        <Button
-          variant="contained"
-          style={{ backgroundColor: "#5bc0de" }}
-          onClick={(e) => this.unmute(e, true)}
-        >
-          <i className="material-icons">volume_off</i>
-        </Button>
+        <Tooltip title="Unmute" arrow>
+          <Button
+            variant="contained"
+            style={{ backgroundColor: "#5bc0de" }}
+            onClick={(e) => this.unmute(e, true)}
+          >
+            <i className="material-icons">volume_off</i>
+          </Button>
+        </Tooltip>
       </div>
     ) : (
       <div>
-        <Button
-          variant="contained"
-          style={{ backgroundColor: "#5bc0de" }}
-          onClick={(e) => this.mute(e, true)}
-        >
-          <i className="material-icons">volume_up</i>
-        </Button>
+        <Tooltip title="Mute" arrow>
+          <Button
+            variant="contained"
+            style={{ backgroundColor: "#5bc0de" }}
+            onClick={(e) => this.mute(e, true)}
+          >
+            <i className="material-icons">volume_up</i>
+          </Button>
+        </Tooltip>
       </div>
     );
   };
   // toggle mute & unmute video buttons actions
   muteVideoActions = () => {
     return this.state.isMuteVideo ? (
-      <Button
-        variant="contained"
-        style={{ backgroundColor: "#5bc0de" }}
-        onClick={(e) => this.unmute(e, false)}
-      >
-        <i className="material-icons">videocam_off</i>
-      </Button>
+      <Tooltip title="Show Video" arrow>
+        <Button
+          variant="contained"
+          style={{ backgroundColor: "#5bc0de" }}
+          onClick={(e) => this.unmute(e, false)}
+        >
+          <i className="material-icons">videocam_off</i>
+        </Button>
+      </Tooltip>
     ) : (
-      <Button
-        variant="contained"
-        style={{ backgroundColor: "#5bc0de" }}
-        onClick={(e) => this.mute(e, false)}
-      >
-        <i className="material-icons">videocam</i>
-      </Button>
+      <Tooltip title="Hide Video" arrow>
+        <Button
+          variant="contained"
+          style={{ backgroundColor: "#5bc0de" }}
+          onClick={(e) => this.mute(e, false)}
+        >
+          <i className="material-icons">videocam</i>
+        </Button>
+      </Tooltip>
     );
   };
 
@@ -403,78 +413,30 @@ export class Publicroom extends Component {
     this.connection.captureUserMedia((_stream) => {}, defaultsOpts);
   };
 
-  // toggle switch functionality Front/rear
-  switchCamera = (e, isFrontView) => {
-    this.connection.streamEvents.selectFirst({
-      local: true,
-    });
-
-    let localVideo = document.getElementById(this.state.localStreamId);
-
-    if (localVideo == null) return;
-
-    if (localVideo.srcObject == null) return;
-    this.connection.attachStreams.forEach((localStream) => {
-      localStream.stop();
-    });
-    localVideo.id = "local-video";
-    this.capture(this.connection.mediaConstraints, isFrontView);
-    this.setState({ isFrontViewCamera: !isFrontView });
-  };
-
-  // toggle camera action buttons
-  cameraActions = () => {
-    if (this.state.disableFlip) {
-      return (
-        <Button
-          disabled
-          variant="contained"
-          style={{ backgroundColor: "#5bc0de" }}
-        >
-          <i className="material-icons">camera_front</i>
-        </Button>
-      );
-    } else {
-      return !this.state.isFrontViewCamera ? (
-        <Button
-          variant="contained"
-          style={{ backgroundColor: "#5bc0de" }}
-          onClick={(e) => this.switchCamera(e, false)}
-        >
-          <i className="material-icons">camera_rear</i>
-        </Button>
-      ) : (
-        <Button
-          variant="contained"
-          style={{ backgroundColor: "#5bc0de" }}
-          onClick={(e) => this.switchCamera(e, true)}
-        >
-          <i className="material-icons">camera_front</i>
-        </Button>
-      );
-    }
-  };
-
   recordVideoActions = () => {
     return this.state.isRecording ? (
       <div>
-        <Button
-          variant="contained"
-          style={{ backgroundColor: "#5bc0de" }}
-          onClick={() => this.stopNewRecording()}
-        >
-          <i className="material-icons">stop</i>
-        </Button>
+        <Tooltip title="Stop Recording" arrow>
+          <Button
+            variant="contained"
+            style={{ backgroundColor: "#5bc0de" }}
+            onClick={() => this.stopNewRecording()}
+          >
+            <i className="material-icons">stop</i>
+          </Button>
+        </Tooltip>
       </div>
     ) : (
       <div>
-        <Button
-          variant="contained"
-          style={{ backgroundColor: "#5bc0de" }}
-          onClick={(e) => this.startNewRecording(e)}
-        >
-          <i className="material-icons">album</i>
-        </Button>
+        <Tooltip title="Start Recording" arrow>
+          <Button
+            variant="contained"
+            style={{ backgroundColor: "#5bc0de" }}
+            onClick={(e) => this.startNewRecording(e)}
+          >
+            <i className="material-icons">album</i>
+          </Button>
+        </Tooltip>
       </div>
     );
     
@@ -484,16 +446,17 @@ export class Publicroom extends Component {
     return this.state.isLoaded ? (
       <Grid container justify="center" spacing={1}>
         <Grid item>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={(e) => this.endCall(e, true)}
-          >
-            <i className="material-icons">call_end</i>
-          </Button>
+          <Tooltip title="End Call" arrow>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={(e) => this.endCall(e, true)}
+            >
+              <i className="material-icons">call_end</i>
+            </Button>
+          </Tooltip>
         </Grid>
         <Grid item></Grid>
-        <Grid item>{this.cameraActions()}</Grid>
         <Grid item>{this.muteActions()}</Grid>
         <Grid item>{this.muteVideoActions()}</Grid>
         <Grid item>{this.recordVideoActions()}</Grid>
@@ -519,8 +482,8 @@ export class Publicroom extends Component {
               (<div>
               <form className="form-room">
                 <div className="container_center">
-                  <div className="col-lg-2 col-md-2 col-sm-2"></div>
-                  <div className="col-lg-5 col-md-5 col-sm-5 container_dashboard">
+                  <div className="col-lg-2 col-md-2"></div>
+                  <div className="col-lg-5 col-md-5 col-sm-12 col-xs-12 container_dashboard">
                     <input
                       type="text"
                       name="roomId"
@@ -533,7 +496,7 @@ export class Publicroom extends Component {
                     />
                   </div>
 
-                  <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                  <div className="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                     <Button
                       variant="contained"
                       color="primary"
@@ -553,14 +516,18 @@ export class Publicroom extends Component {
                       Join Room
                     </Button>
                   </div>
-                  <div className="col-lg-2 col-md-2 col-sm-2"></div>
+                  <div className="col-lg-2 col-md-2"></div>
                 </div>
               </form>
             </div>): 
             (
               <div className="text-center">
-                <h3 className="text-success">Unique URL for your room:</h3>
+                <h3 className="text-success">Use this unique Room Id to join this room:</h3>
                 <h4 className="text-info">Room Id: {this.state.roomId}</h4>
+                <h4 className="text-success">
+                  Open this <a className="text-info" href={DOMAIN_BASE_URL} target="_blank" >Join Room URL</a> url and use above room id to join meeting
+                </h4>
+                
               </div>
             )
           }

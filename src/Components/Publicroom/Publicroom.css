@@ -49,6 +49,6 @@ video::-webkit-media-controls {
   flex-wrap: wrap;
 }
 
-#create-room {
-  margin-right: 10px;
+#create-room , #join-room {
+  margin: 5px;
 }
