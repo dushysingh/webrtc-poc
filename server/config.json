@@ -1,6 +1,6 @@
 {
     "socketURL": "/",
-    "port": "9001",
+    "port": "9002",
     "isUseHTTPs": true,
     "socketMessageEvent": "RTCMultiConnection-Message",
     "socketCustomEvent": "RTCMultiConnection-Custom-Message",

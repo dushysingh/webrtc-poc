@@ -1,6 +1,6 @@
 // http://127.0.0.1:9001
 // http://localhost:9001
-const express = require('express');
+//const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
@@ -71,30 +71,10 @@ console.info(filename);
       }
     }
 
-    if (
-      filename.indexOf(resolveURL('/admin/')) !== -1 &&
-      config.enableAdmin !== true
-    ) {
-      try {
-        response.writeHead(401, {
-          'Content-Type': 'text/plain',
-        })
-        response.write('401 Unauthorized: ' + path.join('/', uri) + '\n')
-        response.end()
-        return
-      } catch (e) {
-        pushLogs(config, '!GET or ..', e)
-      }
-      return
-    }
-
     var matched = false
     ;[
-      '/demos/',
-      '/dev/',
       '/dist/',
       '/socket.io/',
-      '/node_modules/canvas-designer/',
       '/admin/',
     ].forEach(function (item) {
       if (filename.indexOf(resolveURL(item)) !== -1) {
@@ -132,85 +112,85 @@ console.info(filename);
       }
     }
 
-    ;['Video-Broadcasting', 'Screen-Sharing', 'Switch-Cameras'].forEach(
-      function (fname) {
-        try {
-          if (filename.indexOf(fname + '.html') !== -1) {
-            filename = filename.replace(
-              fname + '.html',
-              fname.toLowerCase() + '.html'
-            )
-          }
-        } catch (e) {
-          pushLogs(config, 'forEach', e)
-        }
-      }
-    )
+    // ;['Video-Broadcasting', 'Screen-Sharing', 'Switch-Cameras'].forEach(
+    //   function (fname) {
+    //     try {
+    //       if (filename.indexOf(fname + '.html') !== -1) {
+    //         filename = filename.replace(
+    //           fname + '.html',
+    //           fname.toLowerCase() + '.html'
+    //         )
+    //       }
+    //     } catch (e) {
+    //       pushLogs(config, 'forEach', e)
+    //     }
+    //   }
+    // )
 
-    var stats
+    // var stats
 
-    try {
-      stats = fs.lstatSync(filename)
+    // try {
+    //   stats = fs.lstatSync(filename)
 
-      if (
-        filename.search(/demos/g) === -1 &&
-        filename.search(/admin/g) === -1 &&
-        stats.isDirectory() &&
-        config.homePage === '/demos/index.html'
-      ) {
-        if (response.redirect) {
-          response.redirect('/demos/')
-        } else {
-          response.writeHead(301, {
-            Location: '/demos/',
-          })
-        }
-        response.end()
-        return
-      }
-    } catch (e) {
-      response.writeHead(404, {
-        'Content-Type': 'text/plain',
-      })
-      response.write('404 Not Found: ' + path.join('/', uri) + '\n')
-      response.end()
-      return
-    }
+    //   if (
+    //     filename.search(/demos/g) === -1 &&
+    //     filename.search(/admin/g) === -1 &&
+    //     stats.isDirectory() &&
+    //     config.homePage === '/demos/index.html'
+    //   ) {
+    //     if (response.redirect) {
+    //       response.redirect('/demos/')
+    //     } else {
+    //       response.writeHead(301, {
+    //         Location: '/demos/',
+    //       })
+    //     }
+    //     response.end()
+    //     return
+    //   }
+    // } catch (e) {
+    //   response.writeHead(404, {
+    //     'Content-Type': 'text/plain',
+    //   })
+    //   response.write('404 Not Found: ' + path.join('/', uri) + '\n')
+    //   response.end()
+    //   return
+    // }
 
-    try {
-      if (fs.statSync(filename).isDirectory()) {
-        response.writeHead(404, {
-          'Content-Type': 'text/html',
-        })
+    // try {
+    //   if (fs.statSync(filename).isDirectory()) {
+    //     response.writeHead(404, {
+    //       'Content-Type': 'text/html',
+    //     })
 
-        if (filename.indexOf(resolveURL('/demos/MultiRTC/')) !== -1) {
-          filename = filename.replace(resolveURL('/demos/MultiRTC/'), '')
-          filename += resolveURL('/demos/MultiRTC/index.html')
-        } else if (filename.indexOf(resolveURL('/admin/')) !== -1) {
-          filename = filename.replace(resolveURL('/admin/'), '')
-          filename += resolveURL('/admin/index.html')
-        } else if (filename.indexOf(resolveURL('/demos/dashboard/')) !== -1) {
-          filename = filename.replace(resolveURL('/demos/dashboard/'), '')
-          filename += resolveURL('/demos/dashboard/index.html')
-        } else if (
-          filename.indexOf(resolveURL('/demos/video-conference/')) !== -1
-        ) {
-          filename = filename.replace(
-            resolveURL('/demos/video-conference/'),
-            ''
-          )
-          filename += resolveURL('/demos/video-conference/index.html')
-        } else if (filename.indexOf(resolveURL('/demos')) !== -1) {
-          filename = filename.replace(resolveURL('/demos/'), '')
-          filename = filename.replace(resolveURL('/demos'), '')
-          filename += resolveURL('/demos/index.html')
-        } else {
-          filename += resolveURL(config.homePage)
-        }
-      }
-    } catch (e) {
-      pushLogs(config, 'statSync.isDirectory', e)
-    }
+    //     if (filename.indexOf(resolveURL('/demos/MultiRTC/')) !== -1) {
+    //       filename = filename.replace(resolveURL('/demos/MultiRTC/'), '')
+    //       filename += resolveURL('/demos/MultiRTC/index.html')
+    //     } else if (filename.indexOf(resolveURL('/admin/')) !== -1) {
+    //       filename = filename.replace(resolveURL('/admin/'), '')
+    //       filename += resolveURL('/admin/index.html')
+    //     } else if (filename.indexOf(resolveURL('/demos/dashboard/')) !== -1) {
+    //       filename = filename.replace(resolveURL('/demos/dashboard/'), '')
+    //       filename += resolveURL('/demos/dashboard/index.html')
+    //     } else if (
+    //       filename.indexOf(resolveURL('/demos/video-conference/')) !== -1
+    //     ) {
+    //       filename = filename.replace(
+    //         resolveURL('/demos/video-conference/'),
+    //         ''
+    //       )
+    //       filename += resolveURL('/demos/video-conference/index.html')
+    //     } else if (filename.indexOf(resolveURL('/demos')) !== -1) {
+    //       filename = filename.replace(resolveURL('/demos/'), '')
+    //       filename = filename.replace(resolveURL('/demos'), '')
+    //       filename += resolveURL('/demos/index.html')
+    //     } else {
+    //       filename += resolveURL(config.homePage)
+    //     }
+    //   }
+    // } catch (e) {
+    //   pushLogs(config, 'statSync.isDirectory', e)
+    // }
 
     var contentType = 'text/plain'
     if (filename.toLowerCase().indexOf('.html') !== -1) {
@@ -327,7 +307,7 @@ httpApp = httpApp.listen(PORT, 'localhost', async () => {
 })
 1
 
-socket_io(httpApp).on('connection', function (socket) {
+socket_io(httpApp).on('connection', (socket) => {
   RTCMultiConnectionServer.addSocket(socket, config)
 
   //optional code

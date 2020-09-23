@@ -35,7 +35,7 @@ export class Publicroom extends Component {
   }
 
   socketConnection = () => {
-     this.connection.socketURL = 'https://f613440964f7.ngrok.io/'
+     this.connection.socketURL = 'https://cfee1ad1063d.ngrok.io/'
     this.connection.publicRoomIdentifier = params.publicRoomIdentifier;
     this.connection.socketMessageEvent = "video-demo";
 
@@ -292,7 +292,6 @@ export class Publicroom extends Component {
       }
     });
   };
-  
 
   // end call for all members
   endCall = async (e, endForAllMembers) => {

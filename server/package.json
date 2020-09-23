@@ -1,7 +1,7 @@
 {
   "name": "rtcmulticonnection",
   "preferGlobal": false,
-  "version": "1.0",
+  "version": "1.0.0",
   "author": {
     "name": "dushyant",
     "email": "dushyant.sengar@neosoftmail.com"
@@ -11,35 +11,14 @@
     "start": "node server.js"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": "12.x",
+    "npm": "6.14.x"
   },
-  "main": "./dist/rtc-multi-connection.js",
-  "keywords": [
-    "peer-to-peer",
-    "peer2peer",
-    "p2p",
-    "peer",
-    "webrtc",
-    "rtcmulticonnection",
-    "webrtc-library",
-    "rtcweb",
-    "rtcmulticonnection.js",
-    "multirtc"
-  ],
+  "main": "server.js",
   "dependencies": {
-    "cors": "^2.8.5",
-    "detectrtc": "latest",
-    "multistreamsmixer": "latest",
-    "ngrok": "latest",
-    "webrtc-adapter": "latest"
-  },
-  "analyze": false,
-  "license": "MIT",
-  "readmeFilename": "README.md",
-  "devDependencies": {
-    "express": "^4.17.1",
+    "cors": "2.8.5",
     "fs": "0.0.1-security",
-    "grunt": "^1.3.0",
+    "grunt": "1.3.0",
     "grunt-bump": "0.7.0",
     "grunt-cli": "0.1.13",
     "grunt-contrib-clean": "0.6.0",
@@ -51,10 +30,34 @@
     "grunt-replace": "0.11.0",
     "http": "0.0.1-security",
     "load-grunt-tasks": "3.4.0",
-    "path": "^0.12.7",
-    "recordrtc": "^5.6.1",
-    "rtcmulticonnection-server": "^1.3.2",
-    "socket.io": "^2.3.0",
-    "url": "^0.11.0"
+    "path": "0.12.7",
+    "recordrtc": "5.6.1",
+    "rtcmulticonnection-server": "1.3.2",
+    "socket.io": "2.3.0",
+    "url": "0.11.0",
+    "detectrtc": "latest",
+    "multistreamsmixer": "latest",
+    "webrtc-adapter": "latest"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "fs": "0.0.1-security",
+    "grunt": "1.3.0",
+    "grunt-bump": "0.7.0",
+    "grunt-cli": "0.1.13",
+    "grunt-contrib-clean": "0.6.0",
+    "grunt-contrib-concat": "0.5.1",
+    "grunt-contrib-copy": "0.8.2",
+    "grunt-contrib-uglify": "0.11.0",
+    "grunt-contrib-watch": "1.1.0",
+    "grunt-jsbeautifier": "0.2.10",
+    "grunt-replace": "0.11.0",
+    "http": "0.0.1-security",
+    "load-grunt-tasks": "3.4.0",
+    "path": "0.12.7",
+    "recordrtc": "5.6.1",
+    "rtcmulticonnection-server": "1.3.2",
+    "socket.io": "2.3.0",
+    "url": "0.11.0"
   }
 }
