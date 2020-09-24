@@ -27,6 +27,7 @@ export class Publicroom extends Component {
     this.connection = new RTCMultiConnection();
     this.handleChange = this.handleChange.bind(this);
     this.recorder = '';
+    this.serverRecorder = '';
   }
 
   componentDidMount() {
@@ -211,12 +212,25 @@ export class Publicroom extends Component {
     
     // recordRTC lib call
     this.connection.getUserMedia( async (mediastreeam) => {
+      //client recorder
       this.recorder = await new RecordRTC(mediastreeam, {
           type: 'video',
           mimeType: 'video/webm',
           disableLogs: false
       });
       await this.recorder.startRecording(mediastreeam, {
+        type: 'video',
+        mimeType: 'video/webm',
+        disableLogs: false
+      });
+
+      //server recorder
+      this.serverRecorder = await new RecordRTC(mediastreeam, {
+        type: 'video',
+        mimeType: 'video/webm',
+        disableLogs: false
+      });
+      await this.serverRecorder.startRecording(mediastreeam, {
         type: 'video',
         mimeType: 'video/webm',
         disableLogs: false
@@ -294,7 +308,19 @@ export class Publicroom extends Component {
   // end call for all members
   endCall = async (e, endForAllMembers) => {
     if (endForAllMembers) {
-      this.stopNewRecording();
+      //stop recording
+      let recordedVideo;
+      await this.serverRecorder.stopRecording((blob)=>{
+        this.serverRecorder.save(blob);
+        recordedVideo = {
+          type: 'video/webm',
+          data: blob,
+          id: Math.floor(Math.random()*90000) + 10000
+        }
+        console.log("recordedVideo: ", recordedVideo);
+        localStorage.setItem('recordedVideo',JSON.stringify(recordedVideo));
+        
+      });
 
       // disconnect with all users
       this.connection.getAllParticipants().forEach((pid) => {
