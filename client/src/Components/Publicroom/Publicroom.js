@@ -230,7 +230,6 @@ export class Publicroom extends Component {
       this.recorder.save(blob);
       this.setState({isRecording:false});
     });
-    window.location.reload();
   }
 
 
