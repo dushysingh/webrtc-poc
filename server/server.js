@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 var httpServer = require('http');
+var formidable = require('formidable');
 
 const socket_io = require('socket.io');
 const RTCMultiConnectionServer = require('rtcmulticonnection-server');
@@ -57,6 +58,38 @@ function serverHandler(request, response) {
 console.info(filename);
 
     filename = (filename || '').toString()
+
+    if (request.method == 'POST' && uri.includes('partial-blob')) {
+        let form = new formidable.IncomingForm(),
+        files=[]
+        form.uploadDir = __dirname + '/partial_uploaded'
+        form.on('file', (field, file)=>{
+             files.push([field, file])
+        })
+        .on('end', ()=>{
+             response.writeHead(200, {'Access-Control-Allow-Origin': '*', 'content-type': 'text/plain'})
+             response.end('uploaded')
+        })
+        form.parse(request)
+        return;
+     }
+
+
+    if (request.method == 'POST' && uri.includes('full-blob')) {
+      let form = new formidable.IncomingForm(),
+      files=[]
+      form.uploadDir = __dirname + '/full_uploaded'
+      form.on('file', (field, file)=>{
+           files.push([field, file])
+      })
+      .on('end', ()=>{
+           response.writeHead(200, {'Access-Control-Allow-Origin': '*', 'content-type': 'text/plain'})
+           response.end('uploaded')
+      })
+      form.parse(request)
+      return;
+   }
+
 
     if (request.method !== 'GET' || uri.indexOf('..') !== -1) {
       try {

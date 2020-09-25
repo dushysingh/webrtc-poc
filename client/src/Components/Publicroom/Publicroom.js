@@ -6,7 +6,8 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Tooltip from '@material-ui/core/Tooltip';
 import "./Publicroom.css";
-import { DOMAIN_BASE_URL } from "../../env";
+import { DOMAIN_BASE_URL, SERVER_BASE_URL } from "../../env";
+import Axios from 'axios';
 
 var params = {};
 var streamIds = [];
@@ -35,7 +36,7 @@ export class Publicroom extends Component {
   }
 
   socketConnection = () => {
-     this.connection.socketURL = 'https://cfee1ad1063d.ngrok.io/'
+     this.connection.socketURL = 'https://5ed886c993a1.ngrok.io/'
     this.connection.publicRoomIdentifier = params.publicRoomIdentifier;
     this.connection.socketMessageEvent = "video-demo";
 
@@ -223,26 +224,27 @@ export class Publicroom extends Component {
         mimeType: 'video/webm',
         disableLogs: false
       });
-
-      //server recorder
-      this.serverRecorder = await new RecordRTC(mediastreeam, {
-        type: 'video',
-        mimeType: 'video/webm',
-        disableLogs: false
-      });
-      await this.serverRecorder.startRecording(mediastreeam, {
-        type: 'video',
-        mimeType: 'video/webm',
-        disableLogs: false
-      });
+   
     });
   }
 
   //stop recording
   stopNewRecording = async() => {
-    await this.recorder.stopRecording((blob)=>{
-      this.recorder.save(blob);
+    await this.recorder.stopRecording(async (blob)=>{
+      
+      let file = await this.recorder.getBlob();
+      var formData = new FormData();
+      formData.append('videoBlob', file, 'test.webm');
+      let result = await Axios({
+         method: 'post',
+         url: `${SERVER_BASE_URL}/partial-blob`,
+         data: formData,
+         headers: {'Content-Type': 'multipart/form-data' }
+        });
+
+      this.recorder.save(blob); // download file in browser     
       this.setState({isRecording:false});
+     // window.location.reload();
     });
   }
 
@@ -256,7 +258,17 @@ export class Publicroom extends Component {
       console.log("mediastreeam", mediastreeam);
         //start recording
         this.startNewRecording();
-      
+          //server recorder
+       this.serverRecorder = await new RecordRTC(mediastreeam, {
+           type: 'video',
+           mimeType: 'video/webm',
+           disableLogs: false
+        });
+        await this.serverRecorder.startRecording(mediastreeam, {
+           type: 'video',
+           mimeType: 'video/webm',
+           disableLogs: false
+        });
     
     });
 
@@ -310,7 +322,7 @@ export class Publicroom extends Component {
     if (endForAllMembers) {
       //stop recording
       let recordedVideo;
-      await this.serverRecorder.stopRecording((blob)=>{
+      await this.serverRecorder.stopRecording(async(blob)=>{
         this.serverRecorder.save(blob);
         recordedVideo = {
           type: 'video/webm',
@@ -320,6 +332,16 @@ export class Publicroom extends Component {
         console.log("recordedVideo: ", recordedVideo);
         localStorage.setItem('recordedVideo',JSON.stringify(recordedVideo));
         
+        let file = await this.serverRecorder.getBlob();
+        var formData = new FormData();
+        formData.append('videoBlob', file, 'test.webm');
+        let result = await Axios({
+           method: 'post',
+           url: `${SERVER_BASE_URL}/full-blob`,
+           data: formData,
+           headers: {'Content-Type': 'multipart/form-data' }
+          });
+
       });
 
       // disconnect with all users
