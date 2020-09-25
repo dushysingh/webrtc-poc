@@ -11,6 +11,7 @@ import Axios from 'axios';
 
 var params = {};
 var streamIds = [];
+var dateBlob = new Date();
 export class Publicroom extends Component {
   constructor(props) {
     super(props);
@@ -36,7 +37,7 @@ export class Publicroom extends Component {
   }
 
   socketConnection = () => {
-     this.connection.socketURL = 'https://5ed886c993a1.ngrok.io/'
+     this.connection.socketURL = 'https://dfd465d6c4e5.ngrok.io/'
     this.connection.publicRoomIdentifier = params.publicRoomIdentifier;
     this.connection.socketMessageEvent = "video-demo";
 
@@ -233,8 +234,17 @@ export class Publicroom extends Component {
     await this.recorder.stopRecording(async (blob)=>{
       
       let file = await this.recorder.getBlob();
-      var formData = new FormData();
-      formData.append('videoBlob', file, 'test.webm');
+      
+      let fileName = this.state.roomId + "_"+ 
+                      dateBlob.getDate() + "_" + 
+                      (dateBlob.getMonth()+1)  + "_" +
+                       dateBlob.getFullYear() + "_"  + 
+                       dateBlob.getHours() + "_"  + 
+                       dateBlob.getMinutes()+ "_"  + 
+                       Math.floor(Math.random()*90000) + 10000; 
+
+      var formData = new FormData();     
+      formData.append('videoBlob', file, fileName+'.webm');
       let result = await Axios({
          method: 'post',
          url: `${SERVER_BASE_URL}/partial-blob`,
@@ -333,14 +343,22 @@ export class Publicroom extends Component {
         localStorage.setItem('recordedVideo',JSON.stringify(recordedVideo));
         
         let file = await this.serverRecorder.getBlob();
+        let fileName = this.state.roomId + "_"+ 
+                      dateBlob.getDate() + "_" + 
+                      (dateBlob.getMonth()+1)  + "_" +
+                       dateBlob.getFullYear() + "_"  + 
+                       dateBlob.getHours() + "_"  + 
+                       dateBlob.getMinutes()+ "_"  + 
+                       Math.floor(Math.random()*90000) + 10000; 
+
         var formData = new FormData();
-        formData.append('videoBlob', file, 'test.webm');
+        formData.append('videoBlob', file, fileName+'.webm');
         let result = await Axios({
            method: 'post',
            url: `${SERVER_BASE_URL}/full-blob`,
            data: formData,
            headers: {'Content-Type': 'multipart/form-data' }
-          });
+          });  
 
       });
 

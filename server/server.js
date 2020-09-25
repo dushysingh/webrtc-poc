@@ -69,36 +69,43 @@ console.info(filename);
 
     filename = (filename || '').toString()
 
-    if (request.method == 'POST' && uri.includes('partial-blob')) {
-        let form = new formidable.IncomingForm(),
-        files=[]
-        form.uploadDir = __dirname + '/partial_uploaded'
-        form.on('file', (field, file)=>{
-             files.push([field, file])
-        })
-        .on('end', ()=>{
-             response.writeHead(200, {'Access-Control-Allow-Origin': '*', 'content-type': 'text/plain'})
-             response.end('uploaded')
-        })
-        form.parse(request)
+      if (request.method == 'POST' && uri.includes('partial-blob')) {
+        let form = new formidable.IncomingForm();
+        form.parse(request, function(err, fields, files){ 
+          let oldPath = files.videoBlob.path; 
+          let newPath = path.join(__dirname, 'partial_uploaded') 
+                  + '/'+files.videoBlob.name 
+          let rawData = fs.readFileSync(oldPath) 
+        
+          fs.writeFile(newPath, rawData, function(err){ 
+              if(err) console.log(err) 
+              response.writeHead(200, {'Access-Control-Allow-Origin': '*', 'content-type': 'text/plain'})
+              response.end("Successfully uploaded") 
+          });
+          return;
+        }); 
         return;
      }
 
 
-    if (request.method == 'POST' && uri.includes('full-blob')) {
-      let form = new formidable.IncomingForm(),
-      files=[]
-      form.uploadDir = __dirname + '/full_uploaded'
-      form.on('file', (field, file)=>{
-           files.push([field, file])
-      })
-      .on('end', ()=>{
-           response.writeHead(200, {'Access-Control-Allow-Origin': '*', 'content-type': 'text/plain'})
-           response.end('uploaded')
-      })
-      form.parse(request)
-      return;
-   }
+   
+if (request.method == 'POST' && uri.includes('full-blob')) {
+  let form = new formidable.IncomingForm();
+  form.parse(request, function(err, fields, files){ 
+    let oldPath = files.videoBlob.path; 
+    let newPath = path.join(__dirname, 'full_uploaded') 
+            + '/'+files.videoBlob.name 
+    let rawData = fs.readFileSync(oldPath) 
+  
+    fs.writeFile(newPath, rawData, function(err){ 
+        if(err) console.log(err) 
+        response.writeHead(200, {'Access-Control-Allow-Origin': '*', 'content-type': 'text/plain'})
+        response.end("Successfully uploaded") 
+    });
+    return;
+  }); 
+  return;
+}
 
 
     if (request.method !== 'GET' || uri.indexOf('..') !== -1) {
