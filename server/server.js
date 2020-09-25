@@ -11,6 +11,16 @@ const socket_io = require('socket.io');
 const RTCMultiConnectionServer = require('rtcmulticonnection-server');
 const { file } = require('grunt');
 var cors = require('cors')
+let full_uploaded = './full_uploaded';
+let partial_uploaded = './partial_uploaded';
+
+if (!fs.existsSync(full_uploaded)) {
+    fs.mkdirSync(full_uploaded);
+}
+if (!fs.existsSync(partial_uploaded)) {
+  fs.mkdirSync(partial_uploaded);
+}
+
 //express.use(cors());
 
 var PORT = 9002;
