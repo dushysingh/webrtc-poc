@@ -25,6 +25,7 @@ export class Publicroom extends Component {
       isLoaded: false,
       isRecording: false,
       isRoomCreatedOrJoined: false,
+      userType:''   //creator or joined
     };
     this.connection = new RTCMultiConnection();
     this.handleChange = this.handleChange.bind(this);
@@ -229,6 +230,25 @@ export class Publicroom extends Component {
     });
   }
 
+  //full recording video object
+  fullRecordingVideo = () => {
+       // recordRTC lib call
+    this.connection.getUserMedia( async (mediastreeam) => {
+      //client recorder
+      this.serverRecorder = await new RecordRTC(mediastreeam, {
+          type: 'video',
+          mimeType: 'video/webm',
+          disableLogs: false
+      });
+      await this.serverRecorder.startRecording(mediastreeam, {
+        type: 'video',
+        mimeType: 'video/webm',
+        disableLogs: false
+      });
+   
+    });
+  }
+
   //stop recording
   stopNewRecording = async() => {
     await this.recorder.stopRecording(async (blob)=>{
@@ -264,29 +284,13 @@ export class Publicroom extends Component {
     event.preventDefault();
     this.disabledButtons();
     let roomids = this.state.roomId;
-    this.connection.getUserMedia( async (mediastreeam) => {
-      console.log("mediastreeam", mediastreeam);
-        //start recording
-        this.startNewRecording();
-          //server recorder
-       this.serverRecorder = await new RecordRTC(mediastreeam, {
-           type: 'video',
-           mimeType: 'video/webm',
-           disableLogs: false
-        });
-        await this.serverRecorder.startRecording(mediastreeam, {
-           type: 'video',
-           mimeType: 'video/webm',
-           disableLogs: false
-        });
-    
-    });
+    this.startNewRecording();
+    this.fullRecordingVideo();
 
     this.connection.open(roomids, (isRoomOpened, roomid, error) => {
       if (isRoomOpened === true) {
-         alert('ROOM CREATED :' + roomid)
         this.disabledButtons(true);
-        this.setState({isRoomCreatedOrJoined:true});
+        this.setState({isRoomCreatedOrJoined:true, userType: 'creator'});
         console.log("isRoomCreatedOrJoined:==== ",this.state.isRoomCreatedOrJoined);
         
       } else {
@@ -301,16 +305,10 @@ export class Publicroom extends Component {
     this.disabledButtons();
     this.connection.join(this.state.roomId, (isRoomJoined, roomid, error) => {
       if (isRoomJoined) {
-        alert("ROOM JOINED :" + roomid);
-
-        this.connection.getUserMedia( async (mediastreeam) => {
-          console.log("mediastreeam", mediastreeam);
-          this.startNewRecording();   
-        });
-
-
+       // alert("ROOM JOINED :" + roomid);       
+        this.startNewRecording();   
         this.disabledButtons(true);
-        this.setState({isRoomCreatedOrJoined:true});
+        this.setState({isRoomCreatedOrJoined:true, userType: 'joined'});
         console.log("isRoomCreatedOrJoined:==== ",this.state.isRoomCreatedOrJoined);
         
       } else {
@@ -329,54 +327,63 @@ export class Publicroom extends Component {
 
   // end call for all members
   endCall = async (e, endForAllMembers) => {
-    if (endForAllMembers) {
-      //stop recording
-      let recordedVideo;
-      await this.serverRecorder.stopRecording(async(blob)=>{
-       // this.serverRecorder.save(blob);
-        recordedVideo = {
-          type: 'video/webm',
-          data: blob,
-          id: Math.floor(Math.random()*90000) + 10000
-        }
-        console.log("recordedVideo: ", recordedVideo);
-        localStorage.setItem('recordedVideo',JSON.stringify(recordedVideo));
-        
-        let file = await this.serverRecorder.getBlob();
-        let fileName = this.state.roomId + "_"+ 
-                      dateBlob.getDate() + "_" + 
-                      (dateBlob.getMonth()+1)  + "_" +
-                       dateBlob.getFullYear() + "_"  + 
-                       dateBlob.getHours() + "_"  + 
-                       dateBlob.getMinutes()+ "_"  + 
-                       Math.floor(Math.random()*90000) + 10000; 
-
-        var formData = new FormData();
-        formData.append('videoBlob', file, fileName+'.webm');
-        let result = await Axios({
-           method: 'post',
-           url: `${SERVER_BASE_URL}/full-blob`,
-           data: formData,
-           headers: {'Content-Type': 'multipart/form-data' }
-          });  
-
-                // disconnect with all users
-      this.connection.getAllParticipants().forEach((pid) => {
-        this.connection.disconnectWith(pid);
-      });
-
-      // stop all local cameras
-      this.connection.attachStreams.forEach((localStream) => {
-        localStream.stop();
-      });
-
-       // close socket.io connection
-       // this.connection.closeSocket();
-       window.location.reload();
-
-      });
-
-    } else {
+     let recordedVideo;
+     if (endForAllMembers) {
+         if (this.state.userType == 'creator') {
+                //stop recording
+            await this.serverRecorder.stopRecording(async(blob)=>{
+                // this.serverRecorder.save(blob);
+            recordedVideo = {
+                type: 'video/webm',
+                data: blob,
+                id: Math.floor(Math.random()*90000) + 10000
+            }
+            console.log("recordedVideo: ", recordedVideo);
+            localStorage.setItem('recordedVideo',JSON.stringify(recordedVideo));
+         
+            let file = await this.serverRecorder.getBlob();
+            let fileName = this.state.roomId + "_"+ 
+                       dateBlob.getDate() + "_" + 
+                       (dateBlob.getMonth()+1)  + "_" +
+                        dateBlob.getFullYear() + "_"  + 
+                        dateBlob.getHours() + "_"  + 
+                        dateBlob.getMinutes()+ "_"  + 
+                        Math.floor(Math.random()*90000) + 10000; 
+ 
+            var formData = new FormData();
+            formData.append('videoBlob', file, fileName+'.webm');
+            let result = await Axios({
+                method: 'post',
+                url: `${SERVER_BASE_URL}/full-blob`,
+                data: formData,
+                headers: {'Content-Type': 'multipart/form-data' }
+              });  
+            // disconnect with all users
+            this.connection.getAllParticipants().forEach((pid) => {
+                this.connection.disconnectWith(pid);
+            });
+ 
+            // stop all local cameras
+            this.connection.attachStreams.forEach((localStream) => {
+                localStream.stop();
+            });
+            // close socket.io connection
+            // this.connection.closeSocket();
+            window.location.reload();
+          });
+       } else { //for joined
+            this.connection.getAllParticipants().forEach((pid) => {
+                this.connection.disconnectWith(pid);
+            });
+  
+            // stop all local cameras
+            this.connection.attachStreams.forEach((localStream) => {
+                localStream.stop();
+            });
+            window.location.reload();
+       }
+ 
+  } else {
       // disthis.connection call
     }
   };
