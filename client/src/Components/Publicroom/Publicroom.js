@@ -37,7 +37,7 @@ export class Publicroom extends Component {
   }
 
   socketConnection = () => {
-     this.connection.socketURL = 'https://dfd465d6c4e5.ngrok.io/'
+    this.connection.socketURL = 'https://dc38fb34013b.ngrok.io/'
     this.connection.publicRoomIdentifier = params.publicRoomIdentifier;
     this.connection.socketMessageEvent = "video-demo";
 
@@ -360,9 +360,7 @@ export class Publicroom extends Component {
            headers: {'Content-Type': 'multipart/form-data' }
           });  
 
-      });
-
-      // disconnect with all users
+                // disconnect with all users
       this.connection.getAllParticipants().forEach((pid) => {
         this.connection.disconnectWith(pid);
       });
@@ -372,9 +370,12 @@ export class Publicroom extends Component {
         localStream.stop();
       });
 
-      // close socket.io connection
-      // this.connection.closeSocket();
-      window.location.reload();
+       // close socket.io connection
+       // this.connection.closeSocket();
+       window.location.reload();
+
+      });
+
     } else {
       // disthis.connection call
     }

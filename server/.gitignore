@@ -105,3 +105,4 @@ typings/
 
 .full_uploaded/
 .partial_uploaded/
+.config.json

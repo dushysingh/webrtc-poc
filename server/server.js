@@ -69,6 +69,12 @@ console.info(filename);
 
     filename = (filename || '').toString()
 
+  if (request.method == 'GET') {
+      response.writeHead(200, {'Access-Control-Allow-Origin': '*', 'content-type': 'text/plain'})
+      response.end("Successfully connected"); 
+       return;
+      }
+
       if (request.method == 'POST' && uri.includes('partial-blob')) {
         let form = new formidable.IncomingForm();
         form.parse(request, function(err, fields, files){ 
@@ -355,7 +361,7 @@ RTCMultiConnectionServer.beforeHttpListen(httpApp, config)
 httpApp = httpApp.listen(PORT, 'localhost', async () => {
   RTCMultiConnectionServer.afterHttpListen(httpApp, config)
 })
-1
+
 
 socket_io(httpApp).on('connection', (socket) => {
   RTCMultiConnectionServer.addSocket(socket, config)
