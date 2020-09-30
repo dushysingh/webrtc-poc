@@ -252,7 +252,9 @@ export class Publicroom extends Component {
   //stop recording
   stopNewRecording = async() => {
     await this.recorder.stopRecording(async (blob)=>{
-      
+
+      this.recorder.save(blob); // download file in browser     
+      this.setState({isRecording:false});
       let file = await this.recorder.getBlob();
       
       let fileName = this.state.roomId + "_"+ 
@@ -271,9 +273,6 @@ export class Publicroom extends Component {
          data: formData,
          headers: {'Content-Type': 'multipart/form-data' }
         });
-
-      this.recorder.save(blob); // download file in browser     
-      this.setState({isRecording:false});
      // window.location.reload();
     });
   }
@@ -330,47 +329,49 @@ export class Publicroom extends Component {
      let recordedVideo;
      if (endForAllMembers) {
          if (this.state.userType == 'creator') {
-                //stop recording
-            await this.serverRecorder.stopRecording(async(blob)=>{
-                // this.serverRecorder.save(blob);
-            recordedVideo = {
-                type: 'video/webm',
-                data: blob,
-                id: Math.floor(Math.random()*90000) + 10000
-            }
-            console.log("recordedVideo: ", recordedVideo);
-            localStorage.setItem('recordedVideo',JSON.stringify(recordedVideo));
+                       //stop recording
+                       await this.serverRecorder.stopRecording(async(blob)=>{
+                        // this.serverRecorder.save(blob);
+                    recordedVideo = {
+                        type: 'video/webm',
+                        data: blob,
+                        id: Math.floor(Math.random()*90000) + 10000
+                    }
+                    console.log("recordedVideo: ", recordedVideo);
+                    localStorage.setItem('recordedVideo',JSON.stringify(recordedVideo));
+                 
+                    this.connection.getAllParticipants().forEach((pid) => {
+                      this.connection.disconnectWith(pid);
+                 });
+           
+                      // stop all local cameras
+                    this.connection.attachStreams.forEach((localStream) => {
+                      localStream.stop();
+                  });
+        
+                    let file = await this.serverRecorder.getBlob();
+                    let fileName = this.state.roomId + "_"+ 
+                               dateBlob.getDate() + "_" + 
+                               (dateBlob.getMonth()+1)  + "_" +
+                                dateBlob.getFullYear() + "_"  + 
+                                dateBlob.getHours() + "_"  + 
+                                dateBlob.getMinutes()+ "_"  + 
+                                Math.floor(Math.random()*90000) + 10000; 
          
-            let file = await this.serverRecorder.getBlob();
-            let fileName = this.state.roomId + "_"+ 
-                       dateBlob.getDate() + "_" + 
-                       (dateBlob.getMonth()+1)  + "_" +
-                        dateBlob.getFullYear() + "_"  + 
-                        dateBlob.getHours() + "_"  + 
-                        dateBlob.getMinutes()+ "_"  + 
-                        Math.floor(Math.random()*90000) + 10000; 
- 
-            var formData = new FormData();
-            formData.append('videoBlob', file, fileName+'.webm');
-            let result = await Axios({
-                method: 'post',
-                url: `${SERVER_BASE_URL}/full-blob`,
-                data: formData,
-                headers: {'Content-Type': 'multipart/form-data' }
-              });  
-            // disconnect with all users
-            this.connection.getAllParticipants().forEach((pid) => {
-                this.connection.disconnectWith(pid);
-            });
- 
-            // stop all local cameras
-            this.connection.attachStreams.forEach((localStream) => {
-                localStream.stop();
-            });
-            // close socket.io connection
-            // this.connection.closeSocket();
-            window.location.reload();
-          });
+                    var formData = new FormData();
+                    formData.append('videoBlob', file, fileName+'.webm');
+                    let result = await Axios({
+                        method: 'post',
+                        url: `${SERVER_BASE_URL}/full-blob`,
+                        data: formData,
+                        headers: {'Content-Type': 'multipart/form-data' }
+                      });  
+                    // close socket.io connection
+                    // this.connection.closeSocket();
+                     // disconnect with all users
+        
+                    window.location.reload();
+                  });
        } else { //for joined
             this.connection.getAllParticipants().forEach((pid) => {
                 this.connection.disconnectWith(pid);
