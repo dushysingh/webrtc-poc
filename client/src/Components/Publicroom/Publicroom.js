@@ -333,7 +333,7 @@ export class Publicroom extends Component {
       //stop recording
       let recordedVideo;
       await this.serverRecorder.stopRecording(async(blob)=>{
-        this.serverRecorder.save(blob);
+       // this.serverRecorder.save(blob);
         recordedVideo = {
           type: 'video/webm',
           data: blob,
