@@ -38,9 +38,20 @@ export class Publicroom extends Component {
   }
 
   socketConnection = () => {
-    this.connection.socketURL = 'https://dc38fb34013b.ngrok.io/'
+    this.connection.socketURL = 'https://52ab98b1d867.ngrok.io/'
     this.connection.publicRoomIdentifier = params.publicRoomIdentifier;
     this.connection.socketMessageEvent = "video-demo";
+
+    this.connection.iceServers = [];
+    this.connection.iceServers.push({
+        urls: 'stun:webrtcpoc.test.ovaa.fi:3478'
+    });
+
+    this.connection.iceServers.push({
+      urls: 'turn:webrtcpoc.test.ovaa.fi:3478',
+      credential: 'webrtcpro',
+      username: 'MoreCokeneverenough.'
+    });
 
     this.connection.session = {
       audio: true,
@@ -410,7 +421,7 @@ export class Publicroom extends Component {
   // unmute audio/ video funct
   unmute = (e, isAudio) => {
     if (isAudio) {
-      this.connection.attachStreams[0].unmute();
+      this.connection.attachStreams[0].unmute("audio");
       this.connection.updateExtraData();
       this.setState({ isMute: false });
     } else {
